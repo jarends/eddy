@@ -1,0 +1,27 @@
+{
+  "name": "eddy-project",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./js/builder.js",
+  "scripts": {
+    "postinstall": "cd app && npm install",
+    "start": "coffee -c -w -o ./js ./coffee",
+    "watch": "npm start",
+    "watchrecorder": "cd app && wz -w",
+    "run": "node .",
+    "open": "node . open",
+    "mac": "node . mac",
+    "win": "node . win",
+    "win32": "node . win32",
+    "win64": "node . win64",
+    "all": "node . all"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cross-spawn": "5.0.1",
+    "electron": "1.6.4",
+    "electron-packager": "8.6.0",
+    "fs-extra": "^2.1.2"
+  }
+}

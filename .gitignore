@@ -1,0 +1,7 @@
+/.idea
+/build
+/ideas.txt
+node_modules
+/js
+/app/dist
+.DS_Store

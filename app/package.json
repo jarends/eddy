@@ -1,0 +1,20 @@
+{
+  "name": "eddy",
+  "version": "0.0.1",
+  "electron_version": "1.6.4",
+  "description": "",
+  "main": "./dist/code/main/context.js",
+  "scripts": {},
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "1.6.1",
+    "emap": "latest",
+    "font-awesome": "^4.7.0",
+    "fork-func": "latest",
+    "immutable": "^3.8.1",
+    "lodash": "^4.17.4",
+    "ppost": "latest",
+    "split.js": "^1.2.0"
+  }
+}
