@@ -1,4 +1,4 @@
-DOM = require '../core/dom'
+DOM = require '../core/tree-one'
 
 
 class Toolbar extends DOM.Base

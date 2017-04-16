@@ -164,7 +164,7 @@ class BaseComponent
 #       000           000   000  000   000  000 0 000
 #        0            0000000     0000000   000   000
 
-class VirtualDOM
+class TreeOne
 
 
     constructor: () ->
@@ -203,7 +203,7 @@ class VirtualDOM
 
 
 
-    #    00000000   00000000  000   000  0000000    00000000  00000000 
+    #    00000000   00000000  000   000  0000000    00000000  00000000
     #    000   000  000       0000  000  000   000  000       000   000
     #    0000000    0000000   000 0 000  000   000  0000000   0000000  
     #    000   000  000       000  0000  000   000  000       000   000
@@ -216,7 +216,6 @@ class VirtualDOM
             depth: -1
             ctx:   ctx
 
-        t = Date.now()
         root.root         = root
         node              = @createNode cfg, root
         root.id           = node.id
@@ -224,7 +223,6 @@ class VirtualDOM
         @rootMap[node.id] = root
         host.appendChild node.view
         node.comp.onMount() if node.comp
-        console.log 'render tooks: ', (Date.now() - t)
         node
 
                 
@@ -693,10 +691,8 @@ class VirtualDOM
         @dirty = false
         #TODO: sort by depth to update top down
         nodes = []
-        #t = Date.now()
         nodes.push(@nodeMap[id]) for id of @dirtyMap
         nodes.sort (a, b) -> a.depth - b.depth
-        #console.log 'performeUpdate: ', nodes
         for node in nodes
             continue if not node
             comp = node.comp
@@ -715,7 +711,6 @@ class VirtualDOM
                     props: node.comp.props
             else
                 @updateProperties node, cfg.props
-        #console.log 'performUpdate tooks: ', (Date.now() - t)
         null
 
 
@@ -798,7 +793,7 @@ if typeof Object.assign == 'undefined'
 #    000   000  000   000  000 0 000
 #    0000000     0000000   000   000
 
-dom = new VirtualDOM()
+dom = new TreeOne()
 DOM =
     Base:   BaseComponent
     TEXT:   TEXT

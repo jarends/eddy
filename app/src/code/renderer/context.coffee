@@ -1,5 +1,5 @@
 Post    = require 'ppost'
-DOM     = require './core/dom'
+DOM     = require './core/tree-one'
 AppView = require './view/app-view'
 events  = require '../both/events'
 
