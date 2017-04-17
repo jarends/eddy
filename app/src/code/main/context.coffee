@@ -4,9 +4,10 @@ EventMap      = require 'emap'
 Post          = require 'ppost'
 AppMenu       = require './app-menu'
 Store         = require '../both/store'
-_             = require '../both/utils/pimped-lodash'
+utils         = require '../both/utils'
 BrowserWindow = electron.BrowserWindow
 app           = electron.app
+deepExtend    = utils.deepExtend
 
 
 
@@ -59,7 +60,7 @@ class Context
 
 
     createWin: () ->
-        opts      = _.deepExtend {}, @store.data.win
+        opts      = deepExtend {}, @store.data.win
         opts.show = false
         @mainWin  = new BrowserWindow(opts)
 
@@ -79,7 +80,7 @@ class Context
 
 
     onWinChanged: () ->
-        _.deepExtend @store.data.win, @mainWin.getBounds()
+        deepExtend @store.data.win, @mainWin.getBounds()
         @store.update()
         null
 

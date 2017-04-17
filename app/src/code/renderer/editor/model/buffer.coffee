@@ -1,4 +1,5 @@
 immutable = require 'immutable'
+events    = require '../events'
 Record    = immutable.Record
 List      = immutable.List
 
@@ -18,20 +19,22 @@ class Buffer
 
 
     updateText: (text) ->
+        state = @editor.state
         text  = (text or '').replace /\t/g, '    '
         text  = text.split /\r\n|\r|\n/
         lines = []
         max   = 0
 
         for t, i in text
-            max = t.length if t.length > max
-            lines.push  new Line
+            l   = t.length
+            max = l if l > max
+            lines.push new Line
                 text:  t
                 index: i
 
-        @editor.state.set 'maxCols', max
-        @editor.state.set 'lines',   List lines
-        @editor.renderer.dirty = true
+        state.set 'lines',   List lines
+        state.set 'maxCols', max
+        @editor.emit events.TEXT_UPDATED
         @
 
 

@@ -5,13 +5,13 @@ State       = require './model/state'
 Buffer      = require './model/buffer'
 Cursors     = require './model/cursors'
 Selection   = require './model/selection'
+KeyCtrl     = require './controller/key-ctrl'
+MouseCtrl   = require './controller/mouse-ctrl'
 Indexer     = require './service/indexer'
 Completion  = require './service/completion'
 Highlighter = require './service/highlighter'
-Keys        = require './service/keys'
-Mouse       = require './service/mouse'
 Renderer    = require './service/renderer'
-
+CmdMap      = require '../../both/cmd-map'
 
 TEST = Path.join __dirname, '../../../../test'
 CODE = FS.readFileSync(Path.join(TEST, 'dom.coffee')).toString()
@@ -36,6 +36,7 @@ class Editor extends Emitter
     init: () ->
         return if @initialized
         @initialized = true
+        @cmdMap      = new CmdMap      @
         @state       = new State       @
         @buffer      = new Buffer      @
         @cursors     = new Cursors     @
@@ -43,9 +44,11 @@ class Editor extends Emitter
         @indexer     = new Indexer     @
         @completion  = new Completion  @
         @highlighter = new Highlighter @
-        @keys        = new Keys        @
-        @mouse       = new Mouse       @
         @renderer    = new Renderer    @
+        @keyCtrl     = new KeyCtrl     @
+        @mouseCtrl   = new MouseCtrl   @
+
+        @cmdMap.mapDir Path.join __dirname, 'commands'
         @
 
 

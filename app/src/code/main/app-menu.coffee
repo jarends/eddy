@@ -20,38 +20,38 @@ class AppMenu
             submenu: [
                 label:       'About eddy'
                 id:          'about'
-                accelerator: 'CmdOrCtrl+.'
+                accelerator: 'Cmd+.'
                 click:       @clickHandler
             ,
                 type: 'separator'
             ,
                 label:       'Hide eddy'
                 id:          'hide'
-                accelerator: 'Command+H'
+                accelerator: 'Cmd+h'
                 role:        'hide'
             ,
                 label:       'Hide Others'
                 id:          'hide-others'
-                accelerator: 'Command+Alt+H'
+                accelerator: 'Alt+Cmd+h'
                 role:        'hideothers'
             ,
                 type: 'separator'
             ,
                 label:       'Toggle Dev-Tools'
                 id:          'toggle-dev-tools'
-                accelerator: 'Alt+CmdOrCtrl+I'
+                accelerator: 'Alt+Cmd+i'
                 click:       @clickHandler
             ,
                 label:       'Reload'
                 id:          'reload'
-                accelerator: 'CmdOrCtrl+R'
+                accelerator: 'Cmd+r'
                 click:       @clickHandler
             ,
                 type: 'separator'
             ,
                 label:       'Quit'
                 id:          'quit'
-                accelerator: 'Command+Q'
+                accelerator: 'Cmd+q'
                 click:       @clickHandler
             ]
         ,
@@ -60,7 +60,7 @@ class AppMenu
             submenu: [
                 label:       'Open File'
                 id:          'open-file'
-                accelerator: 'CmdOrCtrl+o'
+                accelerator: 'Cmd+o'
                 click:       @clickHandler
             ,
                 type: 'separator'
@@ -94,6 +94,7 @@ class AppMenu
             when 'toggle-dev-tools' then win.webContents.toggleDevTools()
             when 'quit'             then app.quit()
             when 'add-folder'       then @showAddFolderDialog()
+            when 'open-file'        then console.log 'open file'
 
 
 module.exports = AppMenu

@@ -1,9 +1,11 @@
+events    = require '../events'
+Blinker   = require '../service/blinker'
 Cursor    = require '../views/cursor'
 Line      = require '../views/line'
 Meta      = require '../views/meta'
 Minimap   = require '../views/minimap'
-Rect      = require '../../../both/utils/rect'
-getBounds = require '../../../both/utils/bounds'
+utils     = require '../../../both/utils'
+getBounds = utils.getBounds
 
 
 
@@ -14,7 +16,7 @@ class Renderer
     constructor: (@editor) ->
         console.log 'Renderer.constructor'
         @view        = @editor.view
-        @blinker     = new Blinker @
+        @blinker     = new Blinker()
         @lines       = {}
         @cursors     = {}
         @lineCache   = []
@@ -32,6 +34,10 @@ class Renderer
         @createView()
         @enable()
 
+        @textView.addEventListener 'scroll', @onScroll
+        @editor.on  events.TEXT_UPDATED,     @onTextUpdated
+        @blinker.on Blinker.BLINK,           @onBlink
+
 
 
 
@@ -42,21 +48,21 @@ class Renderer
         @scrollView = document.createElement 'div'
         @preView    = document.createElement 'pre'
         @codeView   = document.createElement 'code'
+        @cursorView = document.createElement 'div'
         @minimap    = new Minimap @editor
-
 
         @metaView.className   = 'meta-view'
         @textView.className   = 'text-view'
         @scrollView.className = 'scroll-view'
+        @cursorView.className = 'cursor-view'
 
         @preView.   appendChild @codeView
         @scrollView.appendChild @preView
+        @scrollView.appendChild @cursorView
         @textView.  appendChild @scrollView
         @view.      appendChild @metaView
         @view.      appendChild @textView
         @view.      appendChild @minimap.view
-
-        @textView.addEventListener 'scroll', @scrollHandler
 
 
 
@@ -94,13 +100,6 @@ class Renderer
             w: bounds.width
             h: bounds.height
         @codeView.removeChild span
-        @
-
-
-
-
-    scrollHandler: () =>
-        @dirty = true
         @
 
 
@@ -144,28 +143,34 @@ class Renderer
                 delete @lines[i]
                 @codeView.removeChild line.view
                 @lineCache.push line
+        @
 
+
+
+
+    drawCursors: () ->
+        @updateFontSize() if not @letter
 
         cursor.used = false for i, cursor of @cursors
-        numCursors = @editor.cursors.getSize()
+        numCursors  = @editor.cursors.getSize()
 
         for i in [0...numCursors]
             data   = @editor.cursors.getCursor i
             cursor = @cursors[i]
             if not cursor
                 cursor = @cursors[i] = @cursorCache.pop() or new Cursor(@editor)
-            cursor.used = true
-            cursor.update data
             if not cursor.view.parent
                 cursor.view.style.left   = (@letter.w * data.col)  + 'px'
                 cursor.view.style.top    = (@letter.h * data.line) + 'px'
-                cursor.view.style.height = (@letter.h - 1)         + 'px'
-                @scrollView.appendChild cursor.view
+                cursor.view.style.height = (@letter.h - 0)         + 'px'
+                @cursorView.appendChild cursor.view
+            cursor.used = true
+            cursor.update data
 
         for i, cursor of @cursors
             if not cursor.used
                 delete @cursors[i]
-                @scrollView.removeChild cursor.view
+                @cursorView.removeChild cursor.view
                 @cursorCache.push cursor
         @
 
@@ -175,39 +180,29 @@ class Renderer
     tick: () =>
         @rafTimeout = window.requestAnimationFrame(@tick) if @enabled
         @draw() if @dirty
-        @blinker.tick()
         @
 
 
 
-class Blinker
+
+    onScroll: () =>
+        @dirty = true
+        @
 
 
-    constructor: (@renderer) ->
-        @start()
 
 
-    start: () ->
-        @frames  = 0
-        @visible = true
+    onBlink: () =>
+        display = if @blinker.visible then 'none' else 'block'
+        cursor.view.style.display = display for i, cursor of @cursors
+        @
 
 
-    show: () ->
-        @visible = true
-        for i, cursor of @renderer.cursors
-            cursor.view.style.display = 'block'
 
 
-    hide: () ->
-        @visible = false
-        for i, cursor of @renderer.cursors
-            cursor.view.style.display = 'none'
-
-
-    tick: () ->
-        if ++@frames == 30
-            @frames = 0
-            if @visible then @hide() else @show()
+    onTextUpdated: () =>
+        @dirty = true
+        @drawCursors()
         @
 
 

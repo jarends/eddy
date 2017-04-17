@@ -1,5 +1,8 @@
-FS = require 'fs'
-_  = require './utils/pimped-lodash'
+FS        = require 'fs'
+utils     = require './utils'
+deepMerge = utils.deepMerge
+
+
 
 
 class Store
@@ -61,11 +64,11 @@ class Store
         try
             data = require @path
         catch e
-            @data = _.deepMerge {}, def or {}
+            @data = deepMerge {}, def or {}
             @write()
             return @data
 
-        @data = _.deepMerge {}, def or {}, data or {}
+        @data = deepMerge {}, def or {}, data or {}
         @data
 
 

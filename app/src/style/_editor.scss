@@ -11,9 +11,10 @@ $meta-width: #222222;
     padding: 0;
     background-color: $text-background-color;
     overflow: hidden;
+    outline: none;
 
-    -webkit-transform: translate3d(0, 0, 1px);
-            transform: translate3d(0, 0, 1px);
+    //-webkit-transform: translate3d(0, 0, 1px);
+    //        transform: translate3d(0, 0, 1px);
 
     -webkit-user-select: none;
             user-select: none;
@@ -41,34 +42,42 @@ $meta-width: #222222;
         overflow: auto;
 
         &>.scroll-view {
+            cursor: text;
 
             & > pre {
-                cursor: text;
-                width: 100%;
-                height: 100%;
+                position: absolute;
                 padding: 0;
                 margin: 0;
 
                 & > code {
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
+                    position: absolute;
                     letter-spacing: 0;
+
+                    & > .line {
+                        position: absolute;
+                        left: 0;
+                    }
                 }
             }
-
-            &>span.cursor {
+            & > .cursor-view {
                 position: absolute;
-                width: 1px;
-                background-color: #CCCCCC;
+
+                & > .cursor {
+                    position: absolute;
+                    width: 3px;
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        left: -1px;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #FFFFFF;
+                        border: 1px solid #222222;
+                    }
+                }
             }
         }
-    }
-
-
-    .line {
-        position: absolute;
-        left: 0;
     }
 
 

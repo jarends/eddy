@@ -14,7 +14,7 @@
     "fork-func": "latest",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
-    "ppost": "latest",
+    "ppost": "^0.1.2",
     "prismjs": "^1.6.0",
     "split.js": "^1.2.0"
   }

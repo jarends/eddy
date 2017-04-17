@@ -11,7 +11,8 @@ class Toolbar extends DOM.Base
         type: 'div'
         props:
             className: 'toolbar'
-            children: [
+            tabindex:  0
+            children:  [
                 'toolbar'
             ]
 
