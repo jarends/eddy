@@ -53,17 +53,17 @@ class KeyCtrl
 
     constructor: (@editor) ->
         @info = null
-        @editor.view.addEventListener 'keydown',  @keyDownHandler
-        @editor.view.addEventListener 'keyup',    @keyUpHandler
+        @editor.view.addEventListener 'keydown',  @onKeyDown
+        @editor.view.addEventListener 'keyup',    @onKeyUp
 
 
 
 
-    keyDownHandler: (event) =>
+    onKeyDown: (event) =>
         info  = keyInfo event
         @info = info if info.isChar or info.isMod
 
-        #console.log 'keyDownHandler: ', info
+        #console.log 'onKeyDown: ', info
 
         if info.isChar
             @editor.emit events.INSERT_TEXT, info.char
@@ -79,7 +79,7 @@ class KeyCtrl
 
 
 
-    keyUpHandler: (event) =>
+    onKeyUp: (event) =>
         #console.log 'up:', event
         @
 

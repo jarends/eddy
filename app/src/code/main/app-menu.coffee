@@ -21,7 +21,7 @@ class AppMenu
                 label:       'About eddy'
                 id:          'about'
                 accelerator: 'Cmd+.'
-                click:       @clickHandler
+                click:       @onClick
             ,
                 type: 'separator'
             ,
@@ -40,19 +40,19 @@ class AppMenu
                 label:       'Toggle Dev-Tools'
                 id:          'toggle-dev-tools'
                 accelerator: 'Alt+Cmd+i'
-                click:       @clickHandler
+                click:       @onClick
             ,
                 label:       'Reload'
                 id:          'reload'
                 accelerator: 'Cmd+r'
-                click:       @clickHandler
+                click:       @onClick
             ,
                 type: 'separator'
             ,
                 label:       'Quit'
                 id:          'quit'
                 accelerator: 'Cmd+q'
-                click:       @clickHandler
+                click:       @onClick
             ]
         ,
             id: 'file'
@@ -61,7 +61,7 @@ class AppMenu
                 label:       'Open File'
                 id:          'open-file'
                 accelerator: 'Cmd+o'
-                click:       @clickHandler
+                click:       @onClick
             ,
                 type: 'separator'
             ]
@@ -87,7 +87,7 @@ class AppMenu
 
 
 
-    clickHandler: (item, win) =>
+    onClick: (item, win) =>
         console.log 'menu item clicked: ', item.id
         switch item.id
             when 'reload'           then win.webContents.reloadIgnoringCache()

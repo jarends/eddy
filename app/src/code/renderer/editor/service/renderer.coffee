@@ -83,10 +83,32 @@ class Renderer
 
 
 
+    getPos: (event) ->
+        @updateFontSize() if not @letter
+        x   = event.clientX
+        y   = event.clientY + @textView.scrollTop
+        w   = @letter.w
+        h   = @letter.h
+        col = Math.floor x / @letter.w
+        row = Math.floor y / @letter.h
+
+        x:   x
+        y:   y
+        x0:  x
+        y0:  y
+        w:   @letter.w
+        h:   @letter.h
+        col: col
+        row: row
+
+
+
+
     updateBounds: () ->
         @dirty  = true
         @bounds = getBounds @view, @bounds
         @
+
 
 
 
