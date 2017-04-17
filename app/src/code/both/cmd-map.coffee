@@ -58,9 +58,12 @@ class CmdMap
     mapDir: (dir) ->
         files = FS.readdirSync dir
         for file in files
-            event = toCamelCase Path.basename(file, '.js')
-            try
-                @map event, require Path.join(dir, file)
+            if /\.js$/.test file
+                event = toCamelCase Path.basename(file, '.js')
+                try
+                    @map event, require Path.join(dir, file)
+                catch error
+                    console.log 'error mapping command: ', dir, file
 
 
 

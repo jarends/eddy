@@ -1,4 +1,4 @@
-@eventclass Cmd
+class Cmd
 
     execute: () ->
         console.log 'execute: ', @event

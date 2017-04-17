@@ -40,4 +40,7 @@ module.exports =
     MOVE_LINE_UP:               'moveLineUp'
     MOVE_LINE_DOWN:             'moveLineDown'
 
+    ADD_CURSOR_IN_PREVIOUS_LINE:               'moveLineUp'
+    ADD_CURSOR_IN_NEXT_LINE:             'moveLineDown'
+
     RELOAD_FILE:                'reloadFile'

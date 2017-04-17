@@ -23,7 +23,7 @@ keyInfo = (event) ->
         mod += 'Ctrl+'  if ctrl
         mod += 'Alt+'   if alt
         mod += 'Cmd+'   if cmd
-        mod += code
+        mod += code or key
 
     isChar: isChar
     char:   char
