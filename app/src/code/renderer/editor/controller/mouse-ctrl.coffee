@@ -30,7 +30,6 @@ class MouseCtrl
             dy        = Math.abs(pos.y - @dragStartPos.y0)
             @dragging = Math.abs(dx) > pos.w * 0.5 or Math.abs(dy) > pos.h
 
-
         if @dragging
             if @lastDragPos
                 dx  = pos.col - @lastDragPos.col
@@ -49,8 +48,7 @@ class MouseCtrl
 
 
     onDragEnd: (event) =>
-        #console.log 'onDragEnd: ', event
-        @dragging = false
+        console.log 'onDragEnd: ', event
         window.removeEventListener 'mousemove',  @onDragMove
         window.removeEventListener 'mouseup',    @onDragEnd
         @
@@ -63,12 +61,14 @@ class MouseCtrl
 
 
     onClick: (event) =>
-        #console.log 'onClick: ', event
+        if not @dragging
+            console.log 'onClick: ', event
+        @dragging = false
         @
 
 
     onDoubleClick: (event) =>
-        #console.log 'onDoubleClick: ', event
+        console.log 'onDoubleClick: ', event
         @
 
 
