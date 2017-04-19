@@ -85,21 +85,15 @@ class Renderer
 
     getPos: (event) ->
         @updateFontSize() if not @letter
-        x   = event.clientX
-        y   = event.clientY + @textView.scrollTop
-        w   = @letter.w
-        h   = @letter.h
-        col = Math.floor x / @letter.w
-        row = Math.floor y / @letter.h
+        x = event.clientX
+        y = event.clientY + @textView.scrollTop
 
         x:   x
         y:   y
-        x0:  x
-        y0:  y
         w:   @letter.w
         h:   @letter.h
-        col: col
-        row: row
+        col: Math.floor x / @letter.w
+        row: Math.floor y / @letter.h
 
 
 
@@ -182,9 +176,9 @@ class Renderer
             if not cursor
                 cursor = @cursors[i] = @cursorCache.pop() or new Cursor(@editor)
             if not cursor.view.parent
-                cursor.view.style.left   = (@letter.w * data.col)  + 'px'
-                cursor.view.style.top    = (@letter.h * data.line) + 'px'
-                cursor.view.style.height = (@letter.h - 0)         + 'px'
+                cursor.view.style.left   = (@letter.w * data.col) + 'px'
+                cursor.view.style.top    = (@letter.h * data.row) + 'px'
+                cursor.view.style.height = (@letter.h - 0)        + 'px'
                 @cursorView.appendChild cursor.view
             cursor.used = true
             cursor.update data

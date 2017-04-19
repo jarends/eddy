@@ -2,7 +2,7 @@ class MouseCtrl
 
 
     constructor: (@editor) ->
-        @dragging     = false
+        @lastPos      = null
         @dragStartPos = null
         @lastDragPos  = null
         @editor.view.addEventListener 'mousedown', @onMouseDown
@@ -25,50 +25,54 @@ class MouseCtrl
 
     onDragMove: (event) =>
         pos = @getPos event
-        if not @dragging
-            dx        = Math.abs(pos.x - @dragStartPos.x0)
-            dy        = Math.abs(pos.y - @dragStartPos.y0)
-            @dragging = Math.abs(dx) > pos.w * 0.5 or Math.abs(dy) > pos.h
-
-        if @dragging
-            if @lastDragPos
-                dx  = pos.col - @lastDragPos.col
-                dy  = pos.row - @lastDragPos.row
-                if dx or dy
-                    dx = pos.col - @dragStartPos.col
-                    dy = pos.row - @dragStartPos.row
-                    @lastDragPos = pos
-                    console.log 'changeSelection: ', dx, dy
-            else
+        if not @lastDragPos
+            dx = Math.abs(pos.x - @dragStartPos.x)
+            dy = Math.abs(pos.y - @dragStartPos.y)
+            if Math.abs(dx) > pos.w * 0.5 or Math.abs(dy) > pos.h
                 @lastDragPos = pos
                 console.log 'startChangingSelection: ', pos.col, pos.row
+
+        if @lastDragPos
+            dx = pos.col - @lastDragPos.col
+            dy = pos.row - @lastDragPos.row
+            if dx or dy
+                dx = pos.col - @dragStartPos.col
+                dy = pos.row - @dragStartPos.row
+                @lastDragPos = pos
+                console.log 'changeSelection: ', dx, dy
         @
 
 
 
 
-    onDragEnd: (event) =>
-        console.log 'onDragEnd: ', event
+    onDragEnd: () =>
         window.removeEventListener 'mousemove',  @onDragMove
         window.removeEventListener 'mouseup',    @onDragEnd
         @
 
 
     onMouseMove: (event) =>
-        #if event.metaKey
-            #console.log 'onMouseMove: ', event
+        if not @lastDragPos and event.metaKey
+            pos = @getPos event
+            if @lastPos
+                dx = pos.col - @lastPos.col
+                dy = pos.row - @lastPos.row
+                if dx or dy
+                    console.log 'current pos changed: ', pos.col, pos.row
+            @lastPos = pos
         @
 
 
     onClick: (event) =>
-        if not @dragging
+        if not @lastDragPos
             console.log 'onClick: ', event
-        @dragging = false
+        @lastDragPos = null
         @
 
 
     onDoubleClick: (event) =>
-        console.log 'onDoubleClick: ', event
+        if not event.altKey
+            console.log 'onDoubleClick: ', event
         @
 
 

@@ -15,7 +15,7 @@ keyInfo = (event) ->
     isChar = key.length == 1 and not (ctrl or cmd)
     char   = if isChar then key else ''
     code   = event.code
-    code   = if key.length == 1 and /^Key/.test(code) then code.slice(-1).toLowerCase() else ''
+    code   = if key.length == 1 and /^Key/.test(code) then code.slice(-1).toLowerCase() else code
     mod    = ''
 
     if not mods[key] and not isChar
@@ -23,7 +23,7 @@ keyInfo = (event) ->
         mod += 'Ctrl+'  if ctrl
         mod += 'Alt+'   if alt
         mod += 'Cmd+'   if cmd
-        mod += code or key
+        mod += code
 
     isChar: isChar
     char:   char

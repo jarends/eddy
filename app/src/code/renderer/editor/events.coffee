@@ -36,6 +36,7 @@ module.exports =
     SELECT_TO_LINE_END:         'selectToLineEnd'
     SELECT_TO_TOP:              'selectToTop'
     SELECT_TO_BOTTOM:           'selectToBottom'
+    DESELECT_ALL:               'deselectAll'
 
     MOVE_LINE_UP:               'moveLineUp'
     MOVE_LINE_DOWN:             'moveLineDown'

@@ -63,8 +63,6 @@ class KeyCtrl
         info  = keyInfo event
         @info = info if info.isChar or info.isMod
 
-        #console.log 'onKeyDown: ', info
-
         if info.isChar
             @editor.emit events.INSERT_TEXT, info.char
             @stopEvent event
@@ -80,7 +78,8 @@ class KeyCtrl
 
 
     onKeyUp: (event) =>
-        #console.log 'up:', event
+        info  = keyInfo event
+        @info = if info.isChar or info.isMod then info else null
         @
 
 

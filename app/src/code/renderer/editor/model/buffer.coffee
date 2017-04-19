@@ -1,25 +1,20 @@
 immutable = require 'immutable'
 events    = require '../events'
-Record    = immutable.Record
+Map       = immutable.Map
 List      = immutable.List
-
-
-Line = Record
-    text:  ''
-    index: -1
 
 
 class Buffer
 
 
     constructor: (@editor) ->
-        console.log 'Buffer.constructor: ', @getSize()
+        console.log 'Buffer.constructor: '
+        @state = @editor.state
 
 
 
 
     updateText: (text) ->
-        state = @editor.state
         text  = (text or '').replace /\t/g, '    '
         text  = text.split /\r\n|\r|\n/
         lines = []
@@ -28,42 +23,51 @@ class Buffer
         for t, i in text
             l   = t.length
             max = l if l > max
-            lines.push new Line
+            lines.push Map
                 text:  t
                 index: i
 
-        state.set 'lines',   List lines
-        state.set 'maxCols', max
+        @state.set 'lines',   List lines
+        @state.set 'maxCols', max
         @editor.emit events.TEXT_UPDATED
         @
 
 
 
     getSize: () ->
-        @editor.state.record.get('lines').size
+        @state.get('lines').size or 0
 
 
 
 
     getMaxCols: () ->
-        @editor.state.get('maxCols')
+        @state.get 'maxCols'
 
 
 
 
     getLine: (index) ->
-        text:  @editor.state.record.getIn ['lines', index, 'text']
-        index: @editor.state.record.getIn ['lines', index, 'index']
+        return null if index < 0 or index >= @getSize()
+        @state.getIn(['lines', index]).toJS()
 
 
 
 
-    getLines: () ->
+    insertTextAt: (row, col, text) ->
         @
 
 
 
-    addLines: (index, text) ->
+
+    removeText: (row0, col0, row1, col1) ->
+
+        @
+
+
+
+
+    removeCharAt: (row, col) ->
+
         @
 
 

@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "1.6.1",
+    "coffee-script": "^1.12.5",
     "emap": "latest",
     "font-awesome": "^4.7.0",
     "fork-func": "latest",

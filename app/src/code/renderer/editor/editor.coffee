@@ -1,6 +1,7 @@
 FS          = require 'fs'
 Path        = require 'path'
 Emitter     = require 'events'
+Coffee      = require "coffee-script"
 State       = require './model/state'
 Buffer      = require './model/buffer'
 Cursors     = require './model/cursors'
@@ -25,6 +26,9 @@ class Editor extends Emitter
     constructor: (@view) ->
         console.log 'Editor.constructor: ', @view
         @init()
+
+
+        #console.log Coffee.nodes(CODE).toString()
 
         start = () =>
             @setText 'coffeescript', CODE
