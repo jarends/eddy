@@ -15,34 +15,38 @@ class Renderer
 
     constructor: (@editor) ->
         console.log 'Renderer.constructor'
-        @view        = @editor.view
-        @blinker     = new Blinker()
-        @lines       = {}
-        @cursors     = {}
-        @lineCache   = []
-        @cursorCache = []
-        @dirty       = false
-        @enabled     = false
-        @bounds      = null
-        @letter      = null
-        @firstLine   = -1
-        @rafTimeout  = null
-        @opts        =
+        @view            = @editor.view
+        @blinker         = new Blinker()
+        @lines           = {}
+        @cursors         = {}
+        @lineCache       = []
+        @cursorCache     = []
+        @linesDirty      = false
+        @cursorsDirty    = false
+        @selectionsDirty = false
+        @enabled         = false
+        @bounds          = null
+        @letter          = null
+        @firstLine       = -1
+        @rafTimeout      = null
+        @opts            =
             metaWidth:    60
             minimapWidth: 120
 
         @createView()
         @enable()
 
-        @textView.addEventListener 'scroll', @onScroll
-        @editor.on  events.TEXT_UPDATED,     @onTextUpdated
-        @blinker.on Blinker.BLINK,           @onBlink
+        @textView.addEventListener 'scroll',   @onScroll
+        @editor.on  events.TEXT_UPDATED,       @onTextUpdated
+        @editor.on  events.CURSORS_CHANGED,    @onCursorsChanged
+        @editor.on  events.SELECTIONS_CHANGED, @onSelectionsChanged
+        @blinker.on Blinker.BLINK,             @onBlink
 
 
 
 
     createView: () ->
-        @dirty      = true
+        @linesDirty = true
         @metaView   = document.createElement 'div'
         @textView   = document.createElement 'div'
         @scrollView = document.createElement 'div'
@@ -99,15 +103,15 @@ class Renderer
 
 
     updateBounds: () ->
-        @dirty  = true
-        @bounds = getBounds @view, @bounds
+        @linesDirty = true
+        @bounds     = getBounds @view, @bounds
         @
 
 
 
 
     updateFontSize: () ->
-        @dirty = true
+        @linesDirty = true
         span   = document.createElement 'span'
         span.textContent = '0'
         @codeView.appendChild span
@@ -121,13 +125,13 @@ class Renderer
 
 
 
-    draw: () ->
+    drawLines: () ->
         @updateBounds()   if not @bounds
         @updateFontSize() if not @letter
 
-        @dirty     = false
-        totalCols  = @editor.buffer.getMaxCols()
-        totalLines = @editor.buffer.getSize()
+        @linesDirty = false
+        totalCols   = @editor.buffer.getMaxCols()
+        totalLines  = @editor.buffer.getSize()
 
         @scrollView.style.width  = (totalCols  * @letter.w) + 'px'
         @scrollView.style.height = (totalLines * @letter.h) + 'px'
@@ -167,8 +171,11 @@ class Renderer
     drawCursors: () ->
         @updateFontSize() if not @letter
 
-        cursor.used = false for i, cursor of @cursors
-        numCursors  = @editor.cursors.getSize()
+        @cursorsDirty = false
+        cursor.used   = false for i, cursor of @cursors
+        numCursors    = @editor.cursors.getSize()
+
+        console.log 'Renderer.drawCursors: ', numCursors
 
         for i in [0...numCursors]
             data   = @editor.cursors.getCursor i
@@ -193,16 +200,25 @@ class Renderer
 
 
 
+    drawSelections: () ->
+        @selectionsDirty = false
+        @
+
+
+
+
     tick: () =>
         @rafTimeout = window.requestAnimationFrame(@tick) if @enabled
-        @draw() if @dirty
+        @drawLines()      if @linesDirty
+        @drawCursors()    if @cursorsDirty
+        @drawSelections() if @selectionsDirty
         @
 
 
 
 
     onScroll: () =>
-        @dirty = true
+        @linesDirty = true
         @
 
 
@@ -217,9 +233,24 @@ class Renderer
 
 
     onTextUpdated: () =>
-        @dirty = true
-        @drawCursors()
+        @linesDirty = true
         @
+
+
+
+
+    onCursorsChanged: () =>
+        console.log 'Renderer.onCursorsChanged'
+        @cursorsDirty = true
+        @
+
+
+
+
+    onSelectionsChanged: () =>
+        @selectionsDirty = true
+        @
+
 
 
 

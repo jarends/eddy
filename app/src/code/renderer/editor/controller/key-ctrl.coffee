@@ -45,6 +45,9 @@ MAP =
 
     'Alt+Cmd+r':            events.RELOAD_FILE
 
+    # for AK
+    # 'Shift+Cmd+x':        event.TOGGLE_UPPERCASE_LOWERCASE
+
 
 
 

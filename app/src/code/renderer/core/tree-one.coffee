@@ -746,7 +746,7 @@ if typeof window != 'undefined'
     for vendor in vendors
         break if window.requestAnimationFrame
         window.requestAnimationFrame = window[vendor + 'RequestAnimationFrame']
-        window.cancelAnimationFrame  = window[vendor + 'CancelAnimationFrame' ] || window[vendor + 'CancelRequestAnimationFrame']
+        window.cancelAnimationFrame  = window[vendor + 'CancelAnimationFrame' ] or window[vendor + 'CancelRequestAnimationFrame']
 
 
     if not window.requestAnimationFrame

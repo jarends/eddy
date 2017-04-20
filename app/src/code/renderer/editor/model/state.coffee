@@ -1,5 +1,6 @@
 immutable = require 'immutable'
 Map       = immutable.Map
+List      = immutable.List
 
 
 
@@ -11,16 +12,15 @@ class State
         @data = Map
             mainCursor: 0
             maxCols:    0
-            lines:      []
-            selections: []
-            cursors:    [
-                col: 0
-                row: 0
+            lines:      List()
+            selections: List()
+            cursors:    List [
+                Map {col: 0, row: 0}
             ]
 
         @pointer = 0
         @history = []
-        console.log 'State.constructor: ', @
+        console.log 'State.constructor: ', @, @getIn ['cursors', 0, 'col']
 
 
 

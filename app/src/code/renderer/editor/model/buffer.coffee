@@ -24,13 +24,15 @@ class Buffer
             l   = t.length
             max = l if l > max
             lines.push Map
-                text:  t
+                text:  t.replace /\s*$/, ''
                 index: i
 
         @state.set 'lines',   List lines
         @state.set 'maxCols', max
         @editor.emit events.TEXT_UPDATED
+        @editor.emit events.CURSORS_CHANGED
         @
+
 
 
 
@@ -53,6 +55,13 @@ class Buffer
 
 
 
+    getLineLength: (index) ->
+        return null if index < 0 or index >= @getSize()
+        text = @state.getIn(['lines', index, 'text']).length
+
+
+
+
     insertTextAt: (row, col, text) ->
         @
 
@@ -60,14 +69,12 @@ class Buffer
 
 
     removeText: (row0, col0, row1, col1) ->
-
         @
 
 
 
 
     removeCharAt: (row, col) ->
-
         @
 
 

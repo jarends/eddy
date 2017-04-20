@@ -1,9 +1,16 @@
+immutable = require 'immutable'
+events    = require '../events'
+Map       = immutable.Map
+List      = immutable.List
+
+
 class Cursors
 
 
     constructor: (@editor) ->
         console.log 'Cursors.constructor'
-        @state = @editor.state
+        @state  = @editor.state
+        @buffer = @editor.buffer
 
 
 
@@ -55,13 +62,62 @@ class Cursors
 
 
 
-    move: (dx, dy) ->
-        maxCols = @state.get 'maxCols'
-        for index in [0...@getSize()]
-            cursor = @state.getIn ['cursors', index]
-            col    = cursor.col
-            row    = cursor.row
+    create: (col, row) ->
+        Map
+            col: col
+            row: row
 
+
+
+
+    forEach: (callback) ->
+        cursors = @state.get 'cursors'
+        for index in [0...cursors.size]
+            callback cursors.get(index).toJS(), index
+        null
+
+
+
+
+    move: (dx, dy) ->
+        maxCols = @buffer.getMaxCols()
+        maxRows = @buffer.getSize()
+        cursors = @state.get 'cursors'
+        @forEach (cursor, index) =>
+            col = cursor.col + dx
+            row = cursor.row + dy
+            if col > maxCols
+                ++row
+                col = 0
+            if col < 0
+                --row
+                col = @buffer.getLineLength(row)
+            row = Math.min Math.max(0, row), maxRows
+
+            @state.setIn ['cursors', index], @create(col, row)
+        @removeEqual()
+        @editor.renderer.cursorsDirty = true
+        @
+
+
+
+
+    removeEqual: () ->
+        main    = @state.get 'mainCursor'
+        map     = {}
+        result  = List()
+        @forEach (cursor, index) ->
+            key = cursor.col + '_' + cursor.row
+            if not map[key]
+                main     = result.length if index == main
+                cursor   = Map cursor
+                map[key] = cursor
+                result   = result.push cursor
+            else
+                if index == main
+                    main = result.indexOf map[key]
+        @state.set 'cursors', result
+        @
 
 
 

@@ -1,5 +1,8 @@
 module.exports =
 
+    CURSORS_CHANGED:            'cursorsChanged'
+    SELECTIONS_CHANGED:         'selectionsChanged'
+
     TEXT_UPDATED:               'textUpdated'
     INSERT_TEXT:                'insertText'
 
