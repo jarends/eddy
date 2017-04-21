@@ -1,8 +1,9 @@
+.DS_Store
 /.idea
 /build
+/js
+/node_modules
 /ideas.txt
-node_modules
-css
-js
-/app/dist
-.DS_Store
+/app/css
+/app/js
+/app/node_modules
