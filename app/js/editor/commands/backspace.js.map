@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "backspace.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "app/coffee/editor/commands/backspace.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAM;;;kBAEF,OAAA,GAAS,SAAA;aACL,OAAO,CAAC,GAAR,CAAY,WAAZ,EAAyB,IAAC,CAAA,KAA1B;IADK;;;;;;EAIb,MAAM,CAAC,OAAP,GAAiB;AANjB"
+}

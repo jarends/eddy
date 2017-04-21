@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "move-cursor-left.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "coffee/renderer/editor/commands/move-cursor-left.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAM;;;kBAEF,OAAA,GAAS,SAAA;aAEL,IAAC,CAAA,GAAG,CAAC,OAAO,CAAC,IAAb,CAAkB,CAAC,CAAnB,EAAsB,CAAtB;IAFK;;;;;;EAKb,MAAM,CAAC,OAAP,GAAiB;AAPjB"
+}

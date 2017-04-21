@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "completion.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "coffee/renderer/editor/service/completion.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAM;IAGW,oBAAC,MAAD;MAAC,IAAC,CAAA,SAAD;MACV,OAAO,CAAC,GAAR,CAAY,wBAAZ;IADS;;;;;;EAMjB,MAAM,CAAC,OAAP,GAAiB;AATjB"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "toolbar.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "app/coffee/renderer/view/toolbar.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA,YAAA;IAAA;;;EAAA,GAAA,GAAM,OAAA,CAAQ,kBAAR;;EAGA;;;IAGW,iBAAA,GAAA;;sBAGb,MAAA,GAAQ,SAAA;aACJ;QAAA,IAAA,EAAM,KAAN;QACA,KAAA,EACI;UAAA,SAAA,EAAW,SAAX;UACA,QAAA,EAAW,CADX;UAEA,QAAA,EAAW,CACP,SADO,CAFX;SAFJ;;IADI;;;;KANU,GAAG,CAAC;;EAkB1B,MAAM,CAAC,OAAP,GAAiB;AArBjB"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "highlighter.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "app/coffee/editor/service/highlighter.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAA,CAAA,GAAI,IAAI,CAAC,GAAL,CAAA;;EACJ,KAAA,GAAQ,OAAA,CAAQ,SAAR;;EACR,OAAA,CAAQ,uCAAR;;EACA,OAAO,CAAC,GAAR,CAAY,kBAAZ,EAAgC,IAAI,CAAC,GAAL,CAAA,CAAA,GAAa,CAA7C;;EAGM;IAGW,qBAAC,MAAD;MAAC,IAAC,CAAA,SAAD;MACV,OAAO,CAAC,GAAR,CAAY,yBAAZ;IADS;;0BAIb,SAAA,GAAW,SAAC,IAAD;aACP,KAAK,CAAC,SAAN,CAAgB,IAAhB,EAAsB,KAAK,CAAC,SAAS,CAAC,YAAtC;IADO;;;;;;EAIf,MAAM,CAAC,OAAP,GAAiB;AAjBjB"
+}

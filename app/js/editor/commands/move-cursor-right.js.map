@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "move-cursor-right.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "app/coffee/editor/commands/move-cursor-right.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAM;;;kBAEF,OAAA,GAAS,SAAA;aAEL,IAAC,CAAA,GAAG,CAAC,OAAO,CAAC,IAAb,CAAkB,CAAlB,EAAqB,CAArB;IAFK;;;;;;EAIb,MAAM,CAAC,OAAP,GAAiB;AANjB"
+}
