@@ -128,7 +128,7 @@ class Renderer
         bounds  = getBounds span
         @letter =
             w: bounds.width
-            h: bounds.height
+            h: bounds.height + 3
         @codeView.removeChild span
         @
 

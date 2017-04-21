@@ -3,7 +3,7 @@ class Cursor
 
     constructor: (@renderer) ->
         console.log 'Cursor.constructor'
-        @height            = @renderer.letter.h + 4
+        @height            = @renderer.letter.h
         @view              = document.createElement 'span'
         @view.className    = 'cursor'
         @view.style.height = @height + 'px'
@@ -21,7 +21,7 @@ class Cursor
             @view.style.top = @y + 'px'
 
         if @height != @renderer.letter.h
-            @height            = @renderer.letter.h + 4
+            @height            = @renderer.letter.h
             @view.style.height = @height + 'px'
 
         @used = true
