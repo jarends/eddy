@@ -2,6 +2,7 @@
 /build
 /ideas.txt
 node_modules
-/js
+css
+js
 /app/dist
 .DS_Store
