@@ -19,19 +19,29 @@ $meta-width: #222222;
     -webkit-user-select: none;
             user-select: none;
 
+
+    textarea {
+        outline: none;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+        box-sizing: border-box;
+        border: none;
+    }
+
+
     .meta-view {
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         width: 60px;
+
+        .meta {
+
+        }
     }
-
-
-    .meta {
-
-    }
-
 
     .text-view {
         position: absolute;
@@ -40,6 +50,7 @@ $meta-width: #222222;
         left: 60px;
         right: 120px;
         overflow: auto;
+        outline: none;
 
         &>.scroll-view {
             cursor: text;

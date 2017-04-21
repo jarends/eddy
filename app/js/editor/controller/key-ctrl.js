@@ -50,17 +50,8 @@
       this.onKeyUp = bind(this.onKeyUp, this);
       this.onKeyDown = bind(this.onKeyDown, this);
       this.info = null;
-      this.editor.view.addEventListener('keydown', this.onKeyDown);
-      this.editor.view.addEventListener('keyup', this.onKeyUp);
-      this.editor.view.addEventListener('compositionstart', function(event) {
-        return console.log('compositionstart: ', event);
-      });
-      this.editor.view.addEventListener('compositionupdate', function(event) {
-        return console.log('compositionupdate: ', event);
-      });
-      this.editor.view.addEventListener('compositionend', function(event) {
-        return console.log('compositionend: ', event);
-      });
+      this.editor.renderer.taView.addEventListener('keydown', this.onKeyDown);
+      this.editor.renderer.taView.addEventListener('keyup', this.onKeyUp);
     }
 
     KeyCtrl.prototype.onKeyDown = function(event) {
@@ -85,6 +76,7 @@
       var info;
       info = keyInfo(event);
       this.info = info.isChar || info.isMod ? info : null;
+      this.editor.renderer.taView.value = '';
       return this;
     };
 

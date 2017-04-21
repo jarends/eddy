@@ -2453,6 +2453,14 @@ pre[class*="language-"] {
   outline: none;
   -webkit-user-select: none;
   user-select: none; }
+  .editor textarea {
+    outline: none;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    box-sizing: border-box;
+    border: none; }
   .editor .meta-view {
     position: absolute;
     top: 0;
@@ -2465,7 +2473,8 @@ pre[class*="language-"] {
     bottom: 0;
     left: 60px;
     right: 120px;
-    overflow: auto; }
+    overflow: auto;
+    outline: none; }
     .editor .text-view > .scroll-view {
       cursor: text; }
       .editor .text-view > .scroll-view > pre {

@@ -52,7 +52,7 @@
       this.createView();
       this.enable();
       this.textView.addEventListener('scroll', this.onScroll);
-      this.textView.addEventListener('focus', this.onFocus, true);
+      this.view.addEventListener('focus', this.onFocus, true);
       this.editor.on(events.TEXT_UPDATED, this.onTextUpdated);
       this.editor.on(events.CURSORS_CHANGED, this.onCursorsChanged);
       this.editor.on(events.SELECTIONS_CHANGED, this.onSelectionsChanged);
@@ -73,7 +73,6 @@
       this.textView.className = 'text-view';
       this.scrollView.className = 'scroll-view';
       this.cursorView.className = 'cursor-view';
-      this.taView.style.display = 'none';
       this.view.appendChild(this.taView);
       this.preView.appendChild(this.codeView);
       this.scrollView.appendChild(this.preView);
@@ -81,7 +80,15 @@
       this.textView.appendChild(this.scrollView);
       this.view.appendChild(this.metaView);
       this.view.appendChild(this.textView);
-      return this.view.appendChild(this.minimap.view);
+      this.view.appendChild(this.minimap.view);
+      this.textView.tabIndex = -1;
+      this.taView.tabIndex = -1;
+      return setTimeout((function(_this) {
+        return function() {
+          _this.taView.focus();
+          return console.log('taView.parent: ', _this.taView.parentNode.parentNode.parentNode);
+        };
+      })(this));
     };
 
     Renderer.prototype.enable = function(value) {
@@ -106,7 +113,7 @@
       if (!this.letter) {
         this.updateFontSize();
       }
-      x = event.clientX;
+      x = event.clientX - 60;
       y = event.clientY + this.textView.scrollTop;
       return {
         x: x,
@@ -269,7 +276,6 @@
     };
 
     Renderer.prototype.onFocus = function() {
-      console.log('onFocus!!!');
       this.taView.focus();
       return this;
     };

@@ -20,11 +20,6 @@
     EditorView.prototype.onMount = function() {
       EditorView.__super__.onMount.call(this);
       this.editor = new Editor(this.view);
-      setTimeout((function(_this) {
-        return function() {
-          return _this.view.focus();
-        };
-      })(this));
       window.addEventListener('resize', this.updateBounds);
       return this;
     };

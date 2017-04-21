@@ -56,11 +56,9 @@ class KeyCtrl
 
     constructor: (@editor) ->
         @info = null
-        @editor.view.addEventListener 'keydown',  @onKeyDown
-        @editor.view.addEventListener 'keyup',    @onKeyUp
-        @editor.view.addEventListener 'compositionstart',  (event) -> console.log 'compositionstart: ',  event
-        @editor.view.addEventListener 'compositionupdate', (event) -> console.log 'compositionupdate: ', event
-        @editor.view.addEventListener 'compositionend',    (event) -> console.log 'compositionend: ',    event
+        @editor.renderer.taView.addEventListener 'keydown',  @onKeyDown
+        @editor.renderer.taView.addEventListener 'keyup',    @onKeyUp
+
 
 
 
@@ -85,6 +83,7 @@ class KeyCtrl
     onKeyUp: (event) =>
         info  = keyInfo event
         @info = if info.isChar or info.isMod then info else null
+        @editor.renderer.taView.value = ''
         @
 
 

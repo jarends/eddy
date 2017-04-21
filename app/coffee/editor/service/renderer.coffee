@@ -38,7 +38,7 @@ class Renderer
         @enable()
 
         @textView.addEventListener 'scroll',   @onScroll
-        @textView.addEventListener 'focus',    @onFocus, true
+        @view.    addEventListener 'focus',    @onFocus, true
         @editor.on  events.TEXT_UPDATED,       @onTextUpdated
         @editor.on  events.CURSORS_CHANGED,    @onCursorsChanged
         @editor.on  events.SELECTIONS_CHANGED, @onSelectionsChanged
@@ -63,8 +63,6 @@ class Renderer
         @scrollView.className = 'scroll-view'
         @cursorView.className = 'cursor-view'
 
-        @taView.style.display = 'none'
-
         @view.      appendChild @taView
         @preView.   appendChild @codeView
         @scrollView.appendChild @preView
@@ -74,6 +72,11 @@ class Renderer
         @view.      appendChild @textView
         @view.      appendChild @minimap.view
 
+        @textView.tabIndex = -1
+        @taView.tabIndex   = -1
+        setTimeout () =>
+            @taView.focus()
+            console.log 'taView.parent: ', @taView.parentNode.parentNode.parentNode
 
 
 
@@ -95,7 +98,7 @@ class Renderer
 
     getPos: (event) ->
         @updateFontSize() if not @letter
-        x = event.clientX
+        x = event.clientX - 60
         y = event.clientY + @textView.scrollTop
 
         x:   x
@@ -245,7 +248,6 @@ class Renderer
 
 
     onFocus: () =>
-        console.log 'onFocus!!!'
         @taView.focus()
         @
 
