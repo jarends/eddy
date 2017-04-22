@@ -20,6 +20,11 @@ $meta-width: #222222;
             user-select: none;
 
 
+    .hidden {
+        display: none;
+    }
+
+
     textarea {
         outline: none;
         margin: 0;

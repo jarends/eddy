@@ -55,9 +55,10 @@ class KeyCtrl
 
 
     constructor: (@editor) ->
-        @info = null
-        @editor.renderer.taView.addEventListener 'keydown',  @onKeyDown
-        @editor.renderer.taView.addEventListener 'keyup',    @onKeyUp
+        @info     = null
+        @textarea = @editor.renderer.textarea
+        @textarea.addEventListener 'keydown',  @onKeyDown
+        @textarea.addEventListener 'keyup',    @onKeyUp
 
 
 
@@ -68,7 +69,7 @@ class KeyCtrl
 
         if info.isChar
             @editor.emit events.INSERT_TEXT, info.char
-            #@stopEvent event
+            @stopEvent event
 
         else if info.isMod
             type = MAP[info.mod]
@@ -83,7 +84,7 @@ class KeyCtrl
     onKeyUp: (event) =>
         info  = keyInfo event
         @info = if info.isChar or info.isMod then info else null
-        @editor.renderer.taView.value = ''
+        @textarea.value = ''
         @
 
 

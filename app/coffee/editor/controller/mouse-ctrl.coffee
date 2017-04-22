@@ -11,8 +11,12 @@ class MouseCtrl
         @editor.view.addEventListener 'dblclick',  @onDoubleClick
 
 
+
+
     getPos: (event) ->
         @editor.renderer.getPos event
+
+
 
 
     onMouseDown: (event) =>
@@ -21,6 +25,8 @@ class MouseCtrl
         window.addEventListener 'mousemove',  @onDragMove
         window.addEventListener 'mouseup',    @onDragEnd
         @
+
+
 
 
     onDragMove: (event) =>
@@ -51,6 +57,8 @@ class MouseCtrl
         @
 
 
+
+
     onMouseMove: (event) =>
         if not @lastDragPos and event.metaKey
             pos = @getPos event
@@ -63,16 +71,22 @@ class MouseCtrl
         @
 
 
+
+
     onClick: (event) =>
         if not @lastDragPos
-            console.log 'onClick: ', event
+            null
+            #console.log 'onClick: ', event
         @lastDragPos = null
         @
 
 
+
+
     onDoubleClick: (event) =>
         if not event.altKey
-            console.log 'onDoubleClick: ', event
+            null
+            #console.log 'onDoubleClick: ', event
         @
 
 

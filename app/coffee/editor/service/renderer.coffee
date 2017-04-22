@@ -17,7 +17,6 @@ class Renderer
         console.log 'Renderer.constructor'
         @view            = @editor.view
         @blinker         = @editor.blinker
-        @mainCursor      = null
         @lines           = {}
         @cursors         = {}
         @lineCache       = []
@@ -25,11 +24,15 @@ class Renderer
         @linesDirty      = false
         @cursorsDirty    = false
         @selectionsDirty = false
+        @focusDirty      = false
         @enabled         = false
+        @hasFocus        = false
+        @cursorsVisible  = true
         @bounds          = null
         @letter          = null
+        @mainCursor      = null
         @firstLine       = -1
-        @rafTimeout      = null
+        @rafTimeout      = NaN
         @opts            =
             metaWidth:    60
             minimapWidth: 120
@@ -37,19 +40,12 @@ class Renderer
         @createView()
         @enable()
 
-        @textView.addEventListener 'scroll',   @onScroll
-        @view.    addEventListener 'focus',    @onFocus, true
-        @editor.on  events.TEXT_UPDATED,       @onTextUpdated
-        @editor.on  events.CURSORS_CHANGED,    @onCursorsChanged
-        @editor.on  events.SELECTIONS_CHANGED, @onSelectionsChanged
-        @blinker.on Blinker.BLINK,             @onBlink
-
 
 
 
     createView: () ->
         @linesDirty = true
-        @taView     = document.createElement 'textarea'
+        @textarea   = document.createElement 'textarea'
         @metaView   = document.createElement 'div'
         @textView   = document.createElement 'div'
         @scrollView = document.createElement 'div'
@@ -63,7 +59,7 @@ class Renderer
         @scrollView.className = 'scroll-view'
         @cursorView.className = 'cursor-view'
 
-        @view.      appendChild @taView
+        @view.      appendChild @textarea
         @preView.   appendChild @codeView
         @scrollView.appendChild @preView
         @scrollView.appendChild @cursorView
@@ -72,17 +68,28 @@ class Renderer
         @view.      appendChild @textView
         @view.      appendChild @minimap.view
 
-        @textView.tabIndex = -1
-        @taView.tabIndex   = -1
-        setTimeout () =>
-            @taView.focus()
-            console.log 'taView.parent: ', @taView.parentNode.parentNode.parentNode
+        @textarea.tabIndex = -1
+
+        @view.addEventListener     'focus',    @onFocus, true
+        @view.addEventListener     'blur',     @onBlur,  true
+        @textView.addEventListener 'scroll',   @onScroll
+
+        @editor.on  events.TEXT_CHANGED,       @onTextChanged
+        @editor.on  events.CURSORS_CHANGED,    @onCursorsChanged
+        @editor.on  events.SELECTIONS_CHANGED, @onSelectionsChanged
+        @blinker.on Blinker.BLINK,             @onBlink
+
+        setTimeout () => @focus()
+        @
+
 
 
 
     enable: (value = true) ->
         @enabled = value
-        @rafTimeout = window.requestAnimationFrame(@tick) if @enabled
+        if value
+            @rafTimeout = window.requestAnimationFrame @tick
+            @focus()
         @
 
 
@@ -96,10 +103,20 @@ class Renderer
 
 
 
+    focus: () ->
+        @hasFocus   = true
+        @focusDirty = true
+        @textarea.focus()
+        @
+
+
+
+
     getPos: (event) ->
+        @updateBounds()   if not @bounds
         @updateFontSize() if not @letter
-        x = event.clientX - 60
-        y = event.clientY + @textView.scrollTop
+        x = event.clientX - @bounds.x
+        y = event.clientY + @textView.scrollTop - @bounds.y
 
         x:   x
         y:   y
@@ -120,15 +137,15 @@ class Renderer
 
 
     updateFontSize: () ->
-        #TODO: correct cursor height if cursors already created
-        @linesDirty = true
-        span   = document.createElement 'span'
+        @linesDirty      = true
+        @cursorsDirty    = true
+        span             = document.createElement 'span'
         span.textContent = '0'
         @codeView.appendChild span
         bounds  = getBounds span
         @letter =
             w: bounds.width
-            h: bounds.height + 3
+            h: bounds.height + 1
         @codeView.removeChild span
         @
 
@@ -206,6 +223,28 @@ class Renderer
 
 
 
+    drawSelections: () ->
+        @selectionsDirty = false
+        @
+
+
+
+
+    drawFocus: () ->
+        @focusDirty = false
+        if @cursorsVisible != @hasFocus
+            @cursorsVisible = @hasFocus
+            if @hasFocus
+                @cursorView.classList.remove 'hidden'
+                @cursorsDirty = true
+                @blinker.show()
+            else
+                @cursorView.classList.add 'hidden'
+        @
+
+
+
+
     scrollTo: (cursor) ->
         sx = @textView.scrollLeft
         sy = @textView.scrollTop
@@ -223,18 +262,13 @@ class Renderer
 
 
 
-    drawSelections: () ->
-        @selectionsDirty = false
-        @
-
-
-
 
     tick: () =>
         @rafTimeout = window.requestAnimationFrame(@tick) if @enabled
         @drawLines()      if @linesDirty
         @drawCursors()    if @cursorsDirty
         @drawSelections() if @selectionsDirty
+        @drawFocus()      if @focusDirty
         @
 
 
@@ -248,21 +282,29 @@ class Renderer
 
 
     onFocus: () =>
-        @taView.focus()
+        @focus() # also shows cursors
+        @
+
+
+
+
+    onBlur: () =>
+        @hasFocus   = false
+        @focusDirty = true
         @
 
 
 
 
     onBlink: () =>
-        display = if @blinker.visible then 'block' else 'none'
-        cursor.view.style.display = display for i, cursor of @cursors
+        if @hasFocus
+            cursor.blink() for i, cursor of @cursors
         @
 
 
 
 
-    onTextUpdated: () =>
+    onTextChanged: () =>
         @linesDirty = true
         @
 
@@ -270,8 +312,8 @@ class Renderer
 
 
     onCursorsChanged: () =>
-        console.log 'Renderer.onCursorsChanged'
         @cursorsDirty = true
+        @blinker.show()
         @
 
 

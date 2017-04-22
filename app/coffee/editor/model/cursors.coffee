@@ -89,8 +89,7 @@ class Cursors
 
             @state.setIn ['cursors', index], @create(col, row)
         @removeEqual()
-        @editor.renderer.cursorsDirty = true
-        @editor.blinker.show()
+        @editor.emit events.CURSORS_CHANGED
         @
 
 

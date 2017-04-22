@@ -1,7 +1,7 @@
 {
     "name": "eddy-project",
     "version": "0.0.1",
-    "description": "",
+    "description": "Build system for eddy, a tiny editor",
     "main": "./js/builder.js",
     "scripts": {
         "postinstall": "cd app && npm install",

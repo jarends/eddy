@@ -42,7 +42,7 @@ normalizeName = (name) ->
         '-' + name.toLowerCase()
 
 
-normalizeEvent = (type) ->
+normalizeEvent = (type)s ->
     type = type.slice 2
     type.charAt(0).toLowerCase() + normalizeName type.slice(1)
 

@@ -28,12 +28,8 @@ class Editor extends Emitter
         console.log 'Editor.constructor: ', @view
         @init()
 
-
         #console.log Coffee.nodes(CODE).toString()
-
-        start = () =>
-            @setText 'coffeescript', CODE
-        setTimeout start, 1
+        setTimeout () => @setText 'coffeescript', CODE
 
 
 
@@ -47,10 +43,10 @@ class Editor extends Emitter
         @buffer      = new Buffer      @
         @cursors     = new Cursors     @
         @selection   = new Selection   @
+        @renderer    = new Renderer    @
         @indexer     = new Indexer     @
         @completion  = new Completion  @
         @highlighter = new Highlighter @
-        @renderer    = new Renderer    @
         @keyCtrl     = new KeyCtrl     @
         @mouseCtrl   = new MouseCtrl   @
 

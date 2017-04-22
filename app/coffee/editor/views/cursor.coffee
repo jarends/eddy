@@ -3,6 +3,7 @@ class Cursor
 
     constructor: (@renderer) ->
         console.log 'Cursor.constructor'
+        @visible           = true
         @height            = @renderer.letter.h
         @view              = document.createElement 'span'
         @view.className    = 'cursor'
@@ -24,10 +25,21 @@ class Cursor
             @height            = @renderer.letter.h
             @view.style.height = @height + 'px'
 
+        @blink()
+
         @used = true
         @data = data
         @
 
+
+
+
+    blink: () ->
+        visible = @renderer.blinker.visible
+        if @visible != visible
+            @visible = visible
+            @view.style.display = if visible then 'block' else 'none'
+        @
 
 
 

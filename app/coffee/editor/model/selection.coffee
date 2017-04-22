@@ -1,3 +1,11 @@
+immutable = require 'immutable'
+events    = require '../events'
+Map       = immutable.Map
+List      = immutable.List
+
+
+
+
 class Selection
 
 

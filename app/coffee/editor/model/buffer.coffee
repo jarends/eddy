@@ -29,7 +29,7 @@ class Buffer
 
         @state.set 'lines',   List lines
         @state.set 'maxCols', max
-        @editor.emit events.TEXT_UPDATED
+        @editor.emit events.TEXT_CHANGED
         @editor.emit events.CURSORS_CHANGED
         @
 
