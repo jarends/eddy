@@ -2,7 +2,6 @@ events    = require '../events'
 Blinker   = require '../service/blinker'
 Cursor    = require '../views/cursor'
 Line      = require '../views/line'
-Meta      = require '../views/meta'
 Minimap   = require '../views/minimap'
 utils     = require '../../utils/utils'
 getBounds = utils.getBounds
@@ -31,7 +30,9 @@ class Renderer
         @bounds          = null
         @letter          = null
         @mainCursor      = null
-        @firstLine       = -1
+        @scrollWidth     = 0
+        @scrollHeight    = 0
+        @indexCols       = 0
         @rafTimeout      = NaN
         @opts            =
             metaWidth:    60
@@ -44,40 +45,46 @@ class Renderer
 
 
     createView: () ->
-        @linesDirty = true
-        @textarea   = document.createElement 'textarea'
-        @metaView   = document.createElement 'div'
-        @textView   = document.createElement 'div'
-        @scrollView = document.createElement 'div'
-        @preView    = document.createElement 'pre'
-        @codeView   = document.createElement 'code'
-        @cursorView = document.createElement 'div'
-        @minimap    = new Minimap @editor
+        @linesDirty     = true
+        @textarea       = document.createElement 'textarea'
+        @metaView       = document.createElement 'div'
+        @metaScrollView = document.createElement 'div'
+        @textView       = document.createElement 'div'
+        @lineScrollView = document.createElement 'div'
+        @preView        = document.createElement 'pre'
+        @codeView       = document.createElement 'code'
+        @cursorView     = document.createElement 'div'
+        @minimap        = new Minimap @editor
 
-        @metaView.className   = 'meta-view'
-        @textView.className   = 'text-view'
-        @scrollView.className = 'scroll-view'
-        @cursorView.className = 'cursor-view'
+        @metaView.className       = 'meta-view'
+        @textView.className       = 'text-view'
+        @metaScrollView.className = 'scroll-view'
+        @lineScrollView.className = 'scroll-view'
+        @cursorView.className     = 'cursor-view'
 
-        @view.      appendChild @textarea
-        @preView.   appendChild @codeView
-        @scrollView.appendChild @preView
-        @scrollView.appendChild @cursorView
-        @textView.  appendChild @scrollView
-        @view.      appendChild @metaView
-        @view.      appendChild @textView
-        @view.      appendChild @minimap.view
+        @view.          appendChild @textarea
+        @preView.       appendChild @codeView
+        @lineScrollView.appendChild @preView
+        @lineScrollView.appendChild @cursorView
+        @metaView.      appendChild @metaScrollView
+        @textView.      appendChild @lineScrollView
+        @view.          appendChild @metaView
+        @view.          appendChild @textView
+        @view.          appendChild @minimap.view
 
-        @textarea.tabIndex = -1
+        @textarea.tabIndex          = -1
+        @metaView.style.width       = @opts.metaWidth + 'px'
+        @metaScrollView.style.width = @opts.metaWidth + 'px'
 
-        @view.addEventListener     'focus',    @onFocus, true
-        @view.addEventListener     'blur',     @onBlur,  true
-        @textView.addEventListener 'scroll',   @onScroll
+        @view.    addEventListener 'focus',  @onFocus, true
+        @view.    addEventListener 'blur',   @onBlur,  true
+        @metaView.addEventListener 'scroll', @onMetaScroll
+        @textView.addEventListener 'scroll', @onTextScroll
 
-        @editor.on  events.TEXT_CHANGED,       @onTextChanged
-        @editor.on  events.CURSORS_CHANGED,    @onCursorsChanged
-        @editor.on  events.SELECTIONS_CHANGED, @onSelectionsChanged
-        @blinker.on Blinker.BLINK,             @onBlink
+        @editor.  on  events.TEXT_CHANGED,       @onTextChanged
+        @editor.  on  events.CURSORS_CHANGED,    @onCursorsChanged
+        @editor.  on  events.SELECTIONS_CHANGED, @onSelectionsChanged
+        @blinker. on Blinker.BLINK,              @onBlink
 
         setTimeout () => @focus()
         @
@@ -142,10 +149,17 @@ class Renderer
         span             = document.createElement 'span'
         span.textContent = '0'
         @codeView.appendChild span
+
         bounds  = getBounds span
         @letter =
             w: bounds.width
             h: bounds.height + 1
+
+        span.className = 'meta'
+        bounds         = getBounds span
+        @metaLetter    =
+            w: bounds.width
+            h: bounds.height
         @codeView.removeChild span
         @
 
@@ -159,13 +173,21 @@ class Renderer
         @linesDirty = false
         totalCols   = @editor.buffer.getMaxCols()
         totalLines  = @editor.buffer.getSize()
+        @indexCols  = Math.floor(Math.log(totalLines) / Math.log(10)) + 1
 
-        @scrollView.style.width  = (totalCols  * @letter.w) + 'px'
-        @scrollView.style.height = (totalLines * @letter.h) + 'px'
+        w = totalCols  * @letter.w
+        h = totalLines * @letter.h
+        if @scrollWidth != w
+            @scrollWidth = w
+            @lineScrollView.style.width = w + 'px'
+
+        if @scrollHeight != h
+            @scrollHeight = h
+            @metaScrollView.style.height = h + 'px'
+            @lineScrollView.style.height = h + 'px'
 
         visibleLines = Math.round(@bounds.height / @letter.h) + 1
         firstLine    = Math.floor @textView.scrollTop / @letter.h
-
         line.used = false for i, line of @lines
 
         for i in [0...visibleLines]
@@ -173,22 +195,18 @@ class Renderer
             line  = @lines[index]
             data  = @editor.buffer.getLine index
 
-            if index >= totalLines
-                continue
+            continue if index >= totalLines
 
             if not line
-                line = @lines[index] = @lineCache.pop() or new Line(@editor)
+                line = @lines[index] = @lineCache.pop() or new Line(@)
 
             line.used = true
             line.update data
-            if not line.view.parentElement
-                line.view.style.top = (@letter.h * index) + 'px'
-                @codeView.appendChild line.view
 
         for i, line of @lines
             if not line.used
+                line.remove()
                 delete @lines[i]
-                @codeView.removeChild line.view
                 @lineCache.push line
         @
 
@@ -258,6 +276,8 @@ class Renderer
             @textView.scrollTop = cursor.y
         else if cursor.y > sy + @bounds.height - 17 - cursor.height
             @textView.scrollTop = cursor.y - @bounds.height + 17 + cursor.height
+
+        @metaView.scrollTop = @textView.scrollTop
         @
 
 
@@ -274,8 +294,17 @@ class Renderer
 
 
 
-    onScroll: () =>
-        @linesDirty = true
+    onTextScroll: () =>
+        @metaView.scrollTop = @textView.scrollTop
+        @linesDirty         = true
+        @
+
+
+
+
+    onMetaScroll: () =>
+        @textView.scrollTop = @metaView.scrollTop
+        @linesDirty         = true
         @
 
 

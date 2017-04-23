@@ -3,11 +3,9 @@ class Cursor
 
     constructor: (@renderer) ->
         console.log 'Cursor.constructor'
-        @visible           = true
-        @height            = @renderer.letter.h
-        @view              = document.createElement 'span'
-        @view.className    = 'cursor'
-        @view.style.height = @height + 'px'
+        @visible        = true
+        @view           = document.createElement 'span'
+        @view.className = 'cursor'
 
 
 

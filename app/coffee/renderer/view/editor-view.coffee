@@ -12,7 +12,6 @@ class EditorView extends DOM.Base
     onMount: () ->
         super()
         @editor = new Editor @view
-        #setTimeout () => @view.focus() # needs to be delayed because we must be in dom
         window.addEventListener 'resize', @updateBounds
         @
 
